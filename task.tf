@@ -169,3 +169,22 @@ depends_on = [
 POLICY
 }
 
+
+#Uploading Image to S3
+resource "aws_s3_bucket_object" "task-1-object" {
+  depends_on = [ aws_s3_bucket.task-1-s3bucket,
+                null_resource.null-remote-1,
+                null_resource.nulllocal32,
+ ]
+     bucket = aws_s3_bucket.task-1-s3bucket.id
+  key    = "one"
+  source = "/Users/gunish/Desktop/terraform/terraform.png"
+  etag = "/Users/gunish/Desktop/terraform/terraform.png"
+  acl = "public-read"
+  content_type = "image/png"
+}
+
+locals {
+  s3_origin_id = "aws_s3_bucket.task-1-s3bucket.id"
+}
+
