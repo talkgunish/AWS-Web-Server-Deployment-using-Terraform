@@ -54,3 +54,31 @@ resource "aws_security_group" "task-1-sg" {
   tags = {
     Name = "task-1-sg"
   }
+
+  
+  #launching instance ec2
+  
+  resource "aws_instance" "task-1-os1" {
+   depends_on =  [ aws_key_pair.task-1-key,
+              aws_security_group.task-1-sg, ] 
+   ami                 = "ami-0447a12f28fddb066"
+   instance_type = "t2.micro"
+   key_name       =  "task-1-key"
+   security_groups = [ "task-1-sg" ]
+     connection {
+     type     = "ssh"
+     user     = "ec2-user"
+     private_key = tls_private_key.task-1-pri-key.private_key_pem
+     host     = aws_instance.task-1-os1.public_ip
+   }
+   provisioner "remote-exec" {
+    inline = [
+      "sudo yum install httpd  php git -y",
+      "sudo systemctl restart httpd",
+      "sudo systemctl enable httpd",
+    ]
+  }
+  tags = {
+      Name =  "task-1-os1"
+           }
+}
