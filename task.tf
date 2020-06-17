@@ -106,3 +106,28 @@ resource "aws_volume_attachment" "ebs_att" {
   force_detach = true
 }
 
+  
+  #config and mount ebs
+  
+  
+  resource "null_resource" "null-remote-1"  {
+  depends_on = [
+      aws_volume_attachment.ebs_att,
+  ]
+  connection {
+    type     = "ssh"
+    user     = "ec2-user"
+    private_key = tls_private_key.task-1-pri-key.private_key_pem
+    host     = aws_instance.task-1-os1.public_ip
+  }
+  provisioner "remote-exec" {
+      inline = [
+        "sudo mkfs.ext4  /dev/xvdh",
+        "sudo mount  /dev/xvdh  /var/www/html" ,
+        "sudo rm -rf /var/www/html/*",                                
+       "sudo git clone https://github.com/talkgunish/Infrastructure-Deployment-using-Terraform.git  /var/www/html/",
+      ]
+  }
+    
+    
+    
