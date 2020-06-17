@@ -82,3 +82,27 @@ resource "aws_security_group" "task-1-sg" {
       Name =  "task-1-os1"
            }
 }
+
+  
+#ebs volume create and attach
+  
+  resource "aws_ebs_volume" "task-1-ebs" {
+  depends_on = [
+    aws_instance.task-1-os1,
+  ]
+  availability_zone = aws_instance.task-1-os1.availability_zone
+  size              = 1
+  tags = {
+    Name = "task-1-ebs"
+  }
+}
+
+
+resource "aws_volume_attachment" "ebs_att" {
+   depends_on = [ aws_ebs_volume.task-1-ebs, ]
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.task-1-ebs.id
+  instance_id = aws_instance.task-1-os1.id
+  force_detach = true
+}
+
