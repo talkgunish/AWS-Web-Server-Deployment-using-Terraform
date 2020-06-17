@@ -278,3 +278,26 @@ resource "aws_cloudfront_distribution" "task-1-s3_distribution" {
 output "out3" {
         value = aws_cloudfront_distribution.task-1-s3_distribution.domain_name
 }
+
+
+
+#Null Resource
+
+
+resource "null_resource" "null-remote2" {
+ depends_on = [ aws_cloudfront_distribution.task-1-s3_distribution, ]
+  connection {
+    type     = "ssh"
+    user     = "ec2-user"
+    private_key = tls_private_key.task-1-pri-key.private_key_pem
+    host     = aws_instance.task-1-os1.public_ip
+   }
+   provisioner "remote-exec" {
+      inline = [
+      "sudo su << EOF",
+      "echo \"<img src='https://${aws_cloudfront_distribution.task-1-s3_distribution.domain_name}/${aws_s3_bucket_object.task-1-object.key }'>\" >> /var/www/html/index.html",
+       "EOF"
+   ]
+ }
+}
+
