@@ -1,10 +1,11 @@
+#provider
 provider "aws" {
   region  = "ap-south-1"
   profile = "mrtiwari"
 }
 
 
-
+#creating key pair
 resource "tls_private_key" "task-1-pri-key" { 
   algorithm   = "RSA"
   rsa_bits = 2048
@@ -17,7 +18,7 @@ resource "aws_key_pair" "task-1-key" {
   public_key = tls_private_key.task-1-pri-key.public_key_openssh
 }
 
-
+#creating security group
 
 resource "aws_security_group" "task-1-sg" {
   depends_on = [ aws_key_pair.task-1-key, ]
