@@ -143,3 +143,29 @@ depends_on = [
       }
     
     
+#Creating S3 bucket.
+
+resource "aws_s3_bucket" "task-1-s3bucket" {
+depends_on = [
+    null_resource.nulllocal32,    
+  ]     
+  bucket = "task-1-s3bucket"
+  force_destroy = true
+  acl    = "public-read"
+  policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Id": "MYBUCKETPOLICY",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:*",
+      "Resource": "arn:aws:s3:::task-1-s3bucket/*"
+    }
+  ]
+}
+POLICY
+}
+
