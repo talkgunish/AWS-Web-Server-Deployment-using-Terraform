@@ -24,7 +24,7 @@ resource "aws_security_group" "task-1-sg" {
   depends_on = [ aws_key_pair.task-1-key, ]
   name        = "task-1-sg"
   description = "Allow SSH AND HTTP inbound traffic"
-  vpc_id      = "vpc-89819de1"
+  vpc_id      = "vpc-b68c3def"
 
 
   ingress {
@@ -54,4 +54,3 @@ resource "aws_security_group" "task-1-sg" {
   tags = {
     Name = "task-1-sg"
   }
-}
