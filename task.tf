@@ -54,7 +54,7 @@ resource "aws_security_group" "task-1-sg" {
   tags = {
     Name = "task-1-sg"
   }
-
+  }
   
   #launching instance ec2
   
@@ -128,6 +128,18 @@ resource "aws_volume_attachment" "ebs_att" {
        "sudo git clone https://github.com/talkgunish/Infrastructure-Deployment-using-Terraform.git  /var/www/html/",
       ]
   }
+    }   
     
+    #Download github repo to local-system
+    
+    resource "null_resource" "nulllocal32"  {
+depends_on = [
+    null_resource.null-remote-1,    
+  ]   
+ provisioner "local-exec" {
+    command = "https://github.com/talkgunish/Infrastructure-Deployment-using-Terraform.git  /Users/gunish/Desktop/terraform/repo/"
+    when    = destroy
+   }
+      }
     
     
