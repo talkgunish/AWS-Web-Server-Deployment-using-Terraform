@@ -301,3 +301,22 @@ resource "null_resource" "null-remote2" {
  }
 }
 
+
+#Launching Web-server
+
+
+resource "null_resource" "nulllocal3" {
+  depends_on = [
+      null_resource.null-remote2,
+   ]
+   provisioner "local-exec" {
+         command = "start chrome ${aws_instance.task-1-os1.public_ip}/index.php"
+    }
+}
+  
+output "myos_ip" {
+  value = aws_instance.task-1-os1.public_ip
+}
+output "private_key" {
+  value = tls_private_key.task-1-pri-key.private_key_pem
+}
