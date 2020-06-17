@@ -16,3 +16,41 @@ resource "aws_key_pair" "task-1-key" {
   key_name   = "task-1-key"
   public_key = tls_private_key.task-1-pri-key.public_key_openssh
 }
+
+
+
+resource "aws_security_group" "task-1-sg" {
+  depends_on = [ aws_key_pair.task-1-key, ]
+  name        = "task-1-sg"
+  description = "Allow SSH AND HTTP inbound traffic"
+  vpc_id      = "vpc-89819de1"
+
+
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
+  tags = {
+    Name = "task-1-sg"
+  }
+}
